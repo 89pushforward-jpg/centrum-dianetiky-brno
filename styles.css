@@ -58,6 +58,7 @@ header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.96);backdro
   .nav-links a{padding:14px 0;border-bottom:1px solid var(--line);width:100%;font-size:15px}
   .burger{display:flex}
   .nav-cta .btn-line{display:none}
+  .nav-cta .btn-blue{display:none} /* Test zdarma je v dolní liště */
 }
 @media(max-width:560px){.brand b{font-size:15px}.nav-cta .btn{padding:10px 14px;font-size:13px}}
 
@@ -123,6 +124,7 @@ section.tight{padding:56px 0}
 
 /* testimonials */
 .testi{border:1px solid var(--line);padding:30px 32px}
+.testi .stars{color:var(--blue);font-size:16px;letter-spacing:3px;margin-bottom:12px}
 .testi h3{font-size:16px;margin-bottom:12px}
 .testi p{font-size:15px;color:var(--grey);font-style:italic}
 .testi b{display:block;margin-top:14px;font-size:13px;color:var(--muted);font-style:normal}
