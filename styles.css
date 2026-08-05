@@ -62,15 +62,20 @@ header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.96);backdro
 }
 @media(max-width:560px){.brand b{font-size:15px}.nav-cta .btn{padding:10px 14px;font-size:13px}}
 
-/* hero */
-.hero .container{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:56px;align-items:center;padding-top:84px;padding-bottom:84px}
-.hero .quote{margin-top:26px;padding-left:18px;border-left:2px solid var(--blue);font-size:15px;color:var(--grey);font-style:italic;max-width:52ch}
-.hero .quote b{display:block;font-style:normal;font-size:13px;color:var(--muted);margin-top:6px;font-weight:600}
+/* hero — full-bleed foto s textem přes obraz */
+.hero{position:relative;color:#fff;background:#0c1526}
+.hero .bg{position:absolute;inset:0;overflow:hidden}
+.hero .bg img{width:100%;height:100%;object-fit:cover;object-position:center 35%}
+.hero .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,21,38,.42) 0%,rgba(12,21,38,.30) 45%,rgba(12,21,38,.82) 100%)}
+.hero .container{position:relative;z-index:1;padding-top:120px;padding-bottom:96px;max-width:var(--maxw)}
+.hero h1{color:#fff;max-width:19ch;text-shadow:0 2px 18px rgba(0,0,0,.45)}
+.hero .label{color:#9fd0f5}
+.hero .quote{margin-top:26px;padding-left:18px;border-left:2px solid var(--blue);font-size:15px;color:#dbe6f5;font-style:italic;max-width:52ch;text-shadow:0 1px 10px rgba(0,0,0,.5)}
+.hero .quote b{display:block;font-style:normal;font-size:13px;color:#a9bbd6;margin-top:6px;font-weight:600}
 .hero .cta-row{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap}
-.hero .ph{position:relative}
-.hero .ph img{width:100%;height:520px;object-fit:cover}
-.hero .ph::after{content:"";position:absolute;left:-14px;bottom:-14px;width:120px;height:120px;border-left:2px solid var(--blue);border-bottom:2px solid var(--blue)}
-@media(max-width:900px){.hero .container{grid-template-columns:1fr;gap:36px;padding-top:52px;padding-bottom:56px}.hero .ph img{height:340px}}
+.hero .btn-line{border-color:rgba(255,255,255,.45);color:#fff}
+.hero .btn-line:hover{border-color:#fff;color:#fff}
+@media(max-width:900px){.hero .container{padding-top:72px;padding-bottom:64px}}
 
 /* sections */
 section{padding:78px 0}
