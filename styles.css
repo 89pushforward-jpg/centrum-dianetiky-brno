@@ -92,6 +92,9 @@ section.tight{padding:56px 0}
 .card{border:1px solid var(--line);background:#fff;display:flex;flex-direction:column}
 .card .ph{aspect-ratio:4/3;overflow:hidden}
 .card .ph img{width:100%;height:100%;object-fit:cover;transition:transform .35s}
+/* dlaždice kurzů — čtvercové fotky, ukázat celé bez ořezu */
+.card.kurz .ph{aspect-ratio:1/1}
+.card.kurz .ph img{object-fit:cover}
 .card:hover .ph img{transform:scale(1.04)}
 .card .body{padding:24px 26px 28px;flex:1;display:flex;flex-direction:column;gap:10px}
 .card p{font-size:14.5px;color:var(--grey)}

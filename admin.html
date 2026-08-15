@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Administrace — Centrum Dianetiky Brno Jižní</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#111;--grey:#4f4f4f;--muted:#8a8a8a;--blue:#4a9edd;--blue-deep:#2f7fbe;--blue-pale:#eef6fd;--line:#e6e8ec;--bg:#f6f8fb;--card:#fff;--green:#2ecc71;--font:"Inter",system-ui,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font-family:var(--font);cursor:pointer}
+input,select,textarea{font-family:var(--font);font-size:14px;width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue)}
+label{display:block;font-size:12px;font-weight:600;color:var(--grey);margin-bottom:6px}
+.btn{display:inline-flex;align-items:center;gap:8px;border:none;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:700;background:var(--blue);color:#fff}
+.btn:hover{background:var(--blue-deep)}
+.btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--blue);color:var(--blue-deep)}
+.btn.danger{background:#fff;border:1px solid #f0c9c4;color:#b4453a}
+.btn.sm{padding:7px 12px;font-size:13px}
+
+/* login */
+#login{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:50;padding:20px}
+#login .box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:38px 34px;max-width:360px;width:100%;text-align:center;box-shadow:0 20px 50px rgba(24,55,96,.08)}
+#login h1{font-size:20px;font-weight:800}
+#login p{color:var(--muted);font-size:13px;margin:8px 0 22px}
+#login input{text-align:center;letter-spacing:.3em;font-size:18px;margin-bottom:14px}
+#login .hint{margin-top:14px;font-size:12px;color:var(--muted)}
+.err{color:#b4453a;font-size:13px;margin-top:6px;min-height:18px}
+
+/* layout */
+.app{display:none;grid-template-columns:250px 1fr;min-height:100vh}
+.app.on{display:grid}
+aside{background:#0f2233;color:#c7d4e0;padding:22px 16px;display:flex;flex-direction:column;gap:4px}
+aside .brand{color:#fff;font-weight:800;font-size:16px;padding:6px 12px 20px;line-height:1.3}
+aside .brand span{display:block;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
+aside nav button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;color:#c7d4e0;padding:11px 12px;border-radius:8px;font-size:14px;font-weight:600}
+aside nav button:hover{background:rgba(255,255,255,.06);color:#fff}
+aside nav button.on{background:var(--blue);color:#fff}
+aside .demo{margin-top:auto;font-size:11px;color:#7f93a6;padding:12px;border-top:1px solid rgba(255,255,255,.08);line-height:1.5}
+aside .logout{margin-top:10px}
+
+main{padding:28px 34px 60px;max-width:1100px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:26px;flex-wrap:wrap}
+.top h2{font-size:24px;font-weight:800}
+.badge{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--blue-pale);color:var(--blue-deep);padding:5px 11px;border-radius:20px}
+.pane{display:none}
+.pane.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px}
+.card+.card{margin-top:18px}
+.card h3{font-size:16px;font-weight:800;margin-bottom:4px}
+.card .sub{color:var(--muted);font-size:13px;margin-bottom:18px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:900px){.app{grid-template-columns:1fr}aside{flex-direction:row;flex-wrap:wrap;position:sticky;top:0;z-index:10}.g2,.g3,.g4{grid-template-columns:1fr 1fr}aside .demo,aside .brand{width:100%}}
+@media(max-width:560px){.g2,.g3,.g4{grid-template-columns:1fr}main{padding:20px}}
+
+/* stat tiles */
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.stat b{display:block;font-size:30px;font-weight:800;letter-spacing:-.02em}
+.stat span{font-size:12.5px;color:var(--muted)}
+.stat .up{color:var(--green);font-size:12px;font-weight:700}
+.chart{display:flex;align-items:flex-end;gap:10px;height:180px;margin-top:8px}
+.chart .bar{flex:1;background:linear-gradient(180deg,var(--blue),var(--blue-deep));border-radius:6px 6px 0 0;position:relative;min-height:4px}
+.chart .bar span{position:absolute;bottom:-22px;left:0;right:0;text-align:center;font-size:11px;color:var(--muted)}
+.chart .bar b{position:absolute;top:-20px;left:0;right:0;text-align:center;font-size:11px;font-weight:700;color:var(--grey)}
+
+/* lists */
+.row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:none}
+.row .thumb{width:48px;height:48px;border-radius:8px;object-fit:cover;background:var(--blue-pale);flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--blue-deep);font-size:14px}
+.row .grow{flex:1;min-width:0}
+.row .grow b{display:block;font-size:14px}
+.row .grow small{color:var(--muted);font-size:12.5px}
+.field-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.field-row>div{flex:1;min-width:120px}
+.hours-row{display:grid;grid-template-columns:120px 90px 1fr 1fr;gap:10px;align-items:center;margin-bottom:8px}
+.hours-row .day{font-weight:600;font-size:14px}
+@media(max-width:560px){.hours-row{grid-template-columns:1fr 1fr}}
+.save-bar{display:flex;align-items:center;gap:14px;margin-top:20px}
+.saved{color:var(--green);font-size:13px;font-weight:600;opacity:0;transition:opacity .2s}
+.saved.show{opacity:1}
+
+/* toast */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#0f2233;color:#fff;padding:12px 22px;border-radius:10px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:60}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* calendar */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:16px}
+.cal .dow{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:center;padding:4px 0}
+.cal .day{min-height:74px;border:1px solid var(--line);border-radius:8px;padding:6px;font-size:12px;background:#fff}
+.cal .day.empty{background:transparent;border:none}
+.cal .day .n{font-weight:700;color:var(--grey);font-size:12px}
+.cal .day .ev{background:var(--blue-pale);color:var(--blue-deep);border-radius:5px;padding:2px 5px;font-size:11px;margin-top:3px;font-weight:600;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;background:var(--blue-pale);color:var(--blue-deep)}
+.pending{border-left:3px solid var(--blue);padding:10px 14px;background:var(--blue-pale);border-radius:0 8px 8px 0;font-size:13px;color:var(--grey);margin-top:8px}
+</style>
+</head>
+<body>
+
+<!-- PŘIHLÁŠENÍ -->
+<div id="login">
+  <div class="box">
+    <h1>Administrace</h1>
+    <p>Centrum Dianetiky Brno Jižní</p>
+    <input type="password" id="pin" inputmode="numeric" placeholder="PIN" maxlength="8" autocomplete="off">
+    <button class="btn" style="width:100%" onclick="doLogin()">Přihlásit se</button>
+    <div class="err" id="loginErr"></div>
+    <div class="hint">Náhledová administrace · demo PIN: <b>1234</b></div>
+  </div>
+</div>
+
+<!-- APLIKACE -->
+<div class="app" id="app">
+  <aside>
+    <div class="brand">Centrum Dianetiky<span>Administrace</span></div>
+    <nav id="nav">
+      <button data-p="prehled" class="on">📊 Přehled</button>
+      <button data-p="doba">🕒 Otevírací doba</button>
+      <button data-p="kontakt">✉️ Kontakt</button>
+      <button data-p="tym">👥 Kdo jsme</button>
+      <button data-p="rozvrh">🗓️ Rozvrh</button>
+      <button data-p="eshop">🛒 E-shop</button>
+      <button data-p="terminy">🎓 Termíny kurzů</button>
+    </nav>
+    <div class="demo">
+      Náhledová verze. Změny se ukládají jen ve Vašem prohlížeči (ukázka). Napojení na živý web a reálné statistiky se dodělá v ostré verzi.
+      <button class="btn ghost sm logout" style="width:100%;margin-top:12px" onclick="logout()">Odhlásit</button>
+    </div>
+  </aside>
+
+  <main>
+    <!-- PŘEHLED -->
+    <section class="pane on" id="pane-prehled">
+      <div class="top"><h2>Přehled</h2><span class="badge">Ukázková data</span></div>
+      <div class="grid g4" style="margin-bottom:18px">
+        <div class="stat"><b>1 248</b><span>Návštěv tento měsíc</span> <span class="up">▲ 12 %</span></div>
+        <div class="stat"><b>176</b><span>Prokliků na „Zavolat"</span> <span class="up">▲ 8 %</span></div>
+        <div class="stat"><b>63</b><span>Vyplněných dotazníků</span> <span class="up">▲ 21 %</span></div>
+        <div class="stat"><b>19</b><span>Přihlášek na kurzy</span> <span class="up">▲ 5 %</span></div>
+      </div>
+      <div class="card">
+        <h3>Návštěvnost za posledních 7 měsíců</h3>
+        <div class="sub">Počet návštěv webu</div>
+        <div class="chart" id="chart"></div>
+      </div>
+      <div class="grid g2" style="margin-top:18px">
+        <div class="card">
+          <h3>Nejnavštěvovanější stránky</h3>
+          <div class="sub">Tento měsíc</div>
+          <div class="row"><div class="grow"><b>Úvod</b></div><span class="tag">512</span></div>
+          <div class="row"><div class="grow"><b>Kurzy</b></div><span class="tag">318</span></div>
+          <div class="row"><div class="grow"><b>Test osobnosti</b></div><span class="tag">241</span></div>
+          <div class="row"><div class="grow"><b>Dianetika</b></div><span class="tag">177</span></div>
+        </div>
+        <div class="card">
+          <h3>Odkud přišli návštěvníci</h3>
+          <div class="sub">Tento měsíc</div>
+          <div class="row"><div class="grow"><b>Google</b></div><span class="tag">58 %</span></div>
+          <div class="row"><div class="grow"><b>Facebook</b></div><span class="tag">22 %</span></div>
+          <div class="row"><div class="grow"><b>Přímý přístup</b></div><span class="tag">14 %</span></div>
+          <div class="row"><div class="grow"><b>Ostatní</b></div><span class="tag">6 %</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OTEVÍRACÍ DOBA -->
+    <section class="pane" id="pane-doba">
+      <div class="top"><h2>Otevírací doba</h2></div>
+      <div class="card">
+        <h3>Nastavte hodiny pro jednotlivé dny</h3>
+        <div class="sub">Zobrazí se v horní liště a v patičce na celém webu.</div>
+        <div id="hoursRows"></div>
+        <div class="save-bar">
+          <button class="btn" onclick="saveHours()">Uložit změny</button>
+          <span class="saved" id="savedDoba">✓ Uloženo</span>
+        </div>
+        <div class="pending">Aktuálně web ukazuje: <b id="hoursPreview">úterý – sobota 9:00–18:00</b></div>
+      </div>
+    </section>
+
+    <!-- KONTAKT -->
+    <section class="pane" id="pane-kontakt">
+      <div class="top"><h2>Kontakt</h2></div>
+      <div class="card">
+        <h3>Kontaktní údaje</h3>
+        <div class="sub">Použijí se v hlavičce, patičce a na stránce Kontakt.</div>
+        <div class="grid g2">
+          <div><label>Telefon</label><input id="k_phone" value="+420 604 471 027"></div>
+          <div><label>E-mail</label><input id="k_email" value="info@centrum-inspiria.cz"></div>
+          <div><label>Ulice a číslo</label><input id="k_street" value="Jižní náměstí 158/20A"></div>
+          <div><label>Město a PSČ</label><input id="k_city" value="619 00 Brno"></div>
+          <div><label>Název organizace</label><input id="k_name" value="Centrum Dianetiky Brno Jižní, z.s."></div>
+          <div><label>IČO</label><input id="k_ico" value="07107064"></div>
+        </div>
+        <div class="save-bar">
+          <button class="btn" onclick="saveContact()">Uložit změny</button>
+          <span class="saved" id="savedKontakt">✓ Uloženo</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TÝM -->
+    <section class="pane" id="pane-tym">
+      <div class="top"><h2>Kdo jsme — tým</h2></div>
+      <div class="card">
+        <h3>Členové týmu</h3>
+        <div class="sub">Přidávejte, upravujte a odebírejte osoby zobrazené na stránce „Kdo jsme".</div>
+        <div id="teamList"></div>
+      </div>
+      <div class="card">
+        <h3>Přidat osobu</h3>
+        <div class="grid g3">
+          <div><label>Jméno</label><input id="t_name" placeholder="Jméno Příjmení"></div>
+          <div><label>Role</label><input id="t_role" placeholder="lektor / konzultant…"></div>
+          <div><label>Foto</label><input type="file" id="t_photo" accept="image/*"></div>
+        </div>
+        <div class="save-bar"><button class="btn" onclick="addPerson()">Přidat osobu</button></div>
+      </div>
+    </section>
+
+    <!-- ROZVRH -->
+    <section class="pane" id="pane-rozvrh">
+      <div class="top"><h2>Rozvrh</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn ghost sm" onclick="calMove(-1)">‹</button>
+          <b id="calLabel" style="min-width:150px;text-align:center"></b>
+          <button class="btn ghost sm" onclick="calMove(1)">›</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Přidat událost do rozvrhu</h3>
+        <div class="field-row">
+          <div><label>Datum</label><input type="date" id="ev_date"></div>
+          <div style="flex:2"><label>Název</label><input id="ev_title" placeholder="Např. Hubbardův dianetický seminář"></div>
+          <button class="btn" onclick="addEvent()">Přidat</button>
+        </div>
+        <div class="cal" id="cal"></div>
+      </div>
+    </section>
+
+    <!-- E-SHOP -->
+    <section class="pane" id="pane-eshop">
+      <div class="top"><h2>E-shop</h2></div>
+      <div class="card">
+        <h3>Produkty</h3>
+        <div class="sub">Knihy a DVD zobrazené v e-shopu.</div>
+        <div id="prodList"></div>
+      </div>
+      <div class="card">
+        <h3>Přidat produkt</h3>
+        <div class="grid g4">
+          <div><label>Typ</label><select id="p_type"><option>Kniha</option><option>DVD</option><option>Audiokniha</option></select></div>
+          <div style="grid-column:span 2"><label>Název</label><input id="p_name" placeholder="Název produktu"></div>
+          <div><label>Cena (Kč)</label><input id="p_price" placeholder="např. 390"></div>
+          <div style="grid-column:span 2"><label>Krátký popis</label><input id="p_desc" placeholder="Jedna věta"></div>
+          <div style="grid-column:span 2"><label>Foto</label><input type="file" id="p_photo" accept="image/*"></div>
+        </div>
+        <div class="save-bar"><button class="btn" onclick="addProduct()">Přidat produkt</button></div>
+      </div>
+    </section>
+
+    <!-- TERMÍNY KURZŮ -->
+    <section class="pane" id="pane-terminy">
+      <div class="top"><h2>Termíny kurzů</h2></div>
+      <div class="card">
+        <h3>Hubbardův dianetický seminář</h3>
+        <div class="sub">Termíny, které se zobrazí u kurzu.</div>
+        <div id="termSeminar"></div>
+        <div class="field-row" style="margin-top:10px">
+          <div><label>Nový termín</label><input type="date" id="term_seminar_date"></div>
+          <button class="btn sm" onclick="addTerm('seminar')">Přidat termín</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Kurz osobní efektivity</h3>
+        <div class="sub">Termíny, které se zobrazí u kurzu.</div>
+        <div id="termPe"></div>
+        <div class="field-row" style="margin-top:10px">
+          <div><label>Nový termín</label><input type="date" id="term_pe_date"></div>
+          <button class="btn sm" onclick="addTerm('pe')">Přidat termín</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ---- jednoduché úložiště (localStorage) ----
+const K='cdb_admin_';
+const store={get:(k,d)=>{try{return JSON.parse(localStorage.getItem(K+k))??d}catch{return d}},set:(k,v)=>localStorage.setItem(K+k,JSON.stringify(v))};
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200);}
+function flash(id){const e=document.getElementById(id);if(!e)return;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2000);}
+
+// ---- login (demo) ----
+function doLogin(){
+  const v=document.getElementById('pin').value.trim();
+  if(v==='1234'){sessionStorage.setItem(K+'auth','1');showApp();}
+  else document.getElementById('loginErr').textContent='Nesprávný PIN.';
+}
+document.getElementById('pin').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+function logout(){sessionStorage.removeItem(K+'auth');location.reload();}
+function showApp(){document.getElementById('login').style.display='none';document.getElementById('app').classList.add('on');initAll();}
+if(sessionStorage.getItem(K+'auth')==='1'){showApp();}
+
+// ---- navigace ----
+document.getElementById('nav').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-p]');if(!b)return;
+  document.querySelectorAll('#nav button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.getElementById('pane-'+b.dataset.p).classList.add('on');
+});
+
+// ---- init vše ----
+function initAll(){ initChart(); initHours(); initContact(); renderTeam(); initCal(); renderCal(); renderProducts(); renderTerms(); }
+
+// ---- graf ----
+function initChart(){
+  const data=[820,910,760,1040,980,1120,1248], months=['Úno','Bře','Dub','Kvě','Čvn','Čvc','Srp'];
+  const max=Math.max(...data);
+  document.getElementById('chart').innerHTML=data.map((v,i)=>`<div class="bar" style="height:${Math.round(v/max*100)}%"><b>${v}</b><span>${months[i]}</span></div>`).join('');
+}
+
+// ---- otevírací doba ----
+const DAYS=['pondělí','úterý','středa','čtvrtek','pátek','sobota','neděle'];
+const defaultHours=DAYS.map((d,i)=>({day:d, open:(i>=1&&i<=5), from:'09:00', to:'18:00'}));
+function initHours(){
+  const h=store.get('hours',defaultHours);
+  document.getElementById('hoursRows').innerHTML=h.map((r,i)=>`
+    <div class="hours-row">
+      <span class="day">${r.day}</span>
+      <label style="margin:0;display:flex;gap:6px;align-items:center;font-weight:600"><input type="checkbox" style="width:auto" ${r.open?'checked':''} onchange="hToggle(${i})"> otevřeno</label>
+      <input type="time" value="${r.from}" data-h="from" data-i="${i}" ${r.open?'':'disabled'}>
+      <input type="time" value="${r.to}" data-h="to" data-i="${i}" ${r.open?'':'disabled'}>
+    </div>`).join('');
+  updateHoursPreview(h);
+}
+function hToggle(i){const h=store.get('hours',defaultHours);h[i].open=!h[i].open;store.set('hours',h);initHours();}
+function saveHours(){
+  const h=store.get('hours',defaultHours);
+  document.querySelectorAll('#hoursRows input[data-h]').forEach(inp=>{h[+inp.dataset.i][inp.dataset.h]=inp.value;});
+  store.set('hours',h);updateHoursPreview(h);flash('savedDoba');toast('Otevírací doba uložena');
+}
+function updateHoursPreview(h){
+  const open=h.filter(r=>r.open);
+  let txt='zavřeno';
+  if(open.length){const f=open[0],l=open[open.length-1];const same=open.every(r=>r.from===f.from&&r.to===f.to);
+    txt=`${f.day} – ${l.day} ${same?f.from+'–'+f.to:'(různě)'}`;}
+  document.getElementById('hoursPreview').textContent=txt;
+}
+
+// ---- kontakt ----
+function initContact(){const c=store.get('contact',null);if(!c)return;for(const k in c){const el=document.getElementById('k_'+k);if(el)el.value=c[k];}}
+function saveContact(){
+  const c={};['phone','email','street','city','name','ico'].forEach(k=>c[k]=document.getElementById('k_'+k).value);
+  store.set('contact',c);flash('savedKontakt');toast('Kontakt uložen');
+}
+
+// ---- tým ----
+const defaultTeam=[
+  {name:'Annamária Čirke „Ria"',role:'výkonný ředitel · konzultantka',photo:''},
+  {name:'Lucie Vašíčková',role:'lektorka',photo:''},
+  {name:'Tomáš Barňák',role:'ředitel pro veřejnost · konzultant',photo:''},
+  {name:'Dagmar Jasná',role:'administrativa',photo:''},
+];
+function renderTeam(){
+  const t=store.get('team',defaultTeam);
+  document.getElementById('teamList').innerHTML=t.map((p,i)=>`
+    <div class="row">
+      <div class="thumb">${p.photo?`<img src="${p.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`:initials(p.name)}</div>
+      <div class="grow"><b>${p.name}</b><small>${p.role}</small></div>
+      <button class="btn danger sm" onclick="delPerson(${i})">Odebrat</button>
+    </div>`).join('')||'<p style="color:var(--muted);font-size:13px">Zatím žádné osoby.</p>';
+}
+function initials(n){return n.replace(/[„"]/g,'').split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase();}
+function addPerson(){
+  const name=document.getElementById('t_name').value.trim(),role=document.getElementById('t_role').value.trim();
+  if(!name){toast('Zadejte jméno');return;}
+  const file=document.getElementById('t_photo').files[0];
+  const done=(photo)=>{const t=store.get('team',defaultTeam);t.push({name,role,photo:photo||''});store.set('team',t);renderTeam();document.getElementById('t_name').value='';document.getElementById('t_role').value='';document.getElementById('t_photo').value='';toast('Osoba přidána');};
+  if(file){const r=new FileReader();r.onload=()=>done(r.result);r.readAsDataURL(file);}else done('');
+}
+function delPerson(i){const t=store.get('team',defaultTeam);t.splice(i,1);store.set('team',t);renderTeam();toast('Osoba odebrána');}
+
+// ---- rozvrh (kalendář) ----
+let calY,calM;
+function initCal(){const d=new Date();calY=d.getFullYear();calM=d.getMonth();}
+function calMove(n){calM+=n;if(calM<0){calM=11;calY--;}if(calM>11){calM=0;calY++;}renderCal();}
+function renderCal(){
+  const monthsCz=['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'];
+  document.getElementById('calLabel').textContent=monthsCz[calM]+' '+calY;
+  const first=new Date(calY,calM,1),start=(first.getDay()+6)%7,days=new Date(calY,calM+1,0).getDate();
+  const events=store.get('events',[]);
+  const dow=['Po','Út','St','Čt','Pá','So','Ne'];
+  let html=dow.map(d=>`<div class="dow">${d}</div>`).join('');
+  for(let i=0;i<start;i++)html+='<div class="day empty"></div>';
+  for(let d=1;d<=days;d++){
+    const ds=`${calY}-${String(calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const evs=events.filter(e=>e.date===ds);
+    html+=`<div class="day"><div class="n">${d}</div>${evs.map((e,idx)=>`<div class="ev" title="Klikněte pro odebrání" onclick="delEvent('${e.date}',${events.indexOf(e)})">${e.title}</div>`).join('')}</div>`;
+  }
+  document.getElementById('cal').innerHTML=html;
+}
+function addEvent(){
+  const date=document.getElementById('ev_date').value,title=document.getElementById('ev_title').value.trim();
+  if(!date||!title){toast('Zadejte datum i název');return;}
+  const e=store.get('events',[]);e.push({date,title});store.set('events',e);
+  const d=new Date(date);calY=d.getFullYear();calM=d.getMonth();
+  document.getElementById('ev_title').value='';renderCal();toast('Událost přidána');
+}
+function delEvent(date,idx){const e=store.get('events',[]);e.splice(idx,1);store.set('events',e);renderCal();toast('Událost odebrána');}
+
+// ---- e-shop ----
+const defaultProducts=[
+  {type:'Kniha',name:'Dianetika: Moderní věda o duševním zdraví',price:'',desc:'Základní kniha o lidské mysli.'},
+  {type:'Kniha',name:'Dianetika: Původní teze',price:'',desc:'První ucelený zápis principů.'},
+  {type:'Kniha',name:'Dianetika: Vývoj vědy',price:'',desc:'Příběh o tom, jak Dianetika vznikala.'},
+  {type:'DVD',name:'Problémy práce — film',price:'',desc:'Filmové zpracování knihy.'},
+];
+function renderProducts(){
+  const p=store.get('products',defaultProducts);
+  document.getElementById('prodList').innerHTML=p.map((x,i)=>`
+    <div class="row">
+      <div class="thumb">${x.photo?`<img src="${x.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`:(x.type==='DVD'?'📀':'📕')}</div>
+      <div class="grow"><b>${x.name}</b><small>${x.type}${x.price?' · '+x.price+' Kč':' · cena na dotaz'}</small></div>
+      <button class="btn danger sm" onclick="delProduct(${i})">Odebrat</button>
+    </div>`).join('')||'<p style="color:var(--muted);font-size:13px">Zatím žádné produkty.</p>';
+}
+function addProduct(){
+  const name=document.getElementById('p_name').value.trim();if(!name){toast('Zadejte název');return;}
+  const rec={type:document.getElementById('p_type').value,name,price:document.getElementById('p_price').value.trim(),desc:document.getElementById('p_desc').value.trim()};
+  const file=document.getElementById('p_photo').files[0];
+  const done=(photo)=>{rec.photo=photo||'';const p=store.get('products',defaultProducts);p.push(rec);store.set('products',p);renderProducts();['p_name','p_price','p_desc'].forEach(id=>document.getElementById(id).value='');document.getElementById('p_photo').value='';toast('Produkt přidán');};
+  if(file){const r=new FileReader();r.onload=()=>done(r.result);r.readAsDataURL(file);}else done('');
+}
+function delProduct(i){const p=store.get('products',defaultProducts);p.splice(i,1);store.set('products',p);renderProducts();toast('Produkt odebrán');}
+
+// ---- termíny kurzů ----
+function renderTerms(){
+  ['seminar','pe'].forEach(key=>{
+    const t=store.get('term_'+key,[]);
+    document.getElementById(key==='seminar'?'termSeminar':'termPe').innerHTML=
+      t.length?t.map((d,i)=>`<div class="row"><div class="grow"><b>${fmtDate(d)}</b></div><button class="btn danger sm" onclick="delTerm('${key}',${i})">Zrušit</button></div>`).join('')
+      :'<p style="color:var(--muted);font-size:13px">Zatím žádné vypsané termíny.</p>';
+  });
+}
+function addTerm(key){
+  const d=document.getElementById(key==='seminar'?'term_seminar_date':'term_pe_date').value;
+  if(!d){toast('Vyberte datum');return;}
+  const t=store.get('term_'+key,[]);t.push(d);t.sort();store.set('term_'+key,t);renderTerms();toast('Termín přidán');
+}
+function delTerm(key,i){const t=store.get('term_'+key,[]);t.splice(i,1);store.set('term_'+key,t);renderTerms();toast('Termín zrušen');}
+function fmtDate(d){const x=new Date(d);return x.toLocaleDateString('cs-CZ',{day:'numeric',month:'long',year:'numeric'});}
+</script>
+</body>
+</html>
