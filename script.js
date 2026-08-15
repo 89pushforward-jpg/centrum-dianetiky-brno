@@ -5,22 +5,31 @@ if(burger&&navLinks){
   navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navLinks.classList.remove('open')));
 }
 
-// živý stav — Po–Pá 9:00–17:00 (čas ČR)
+// živý stav — úterý–sobota 9:00–18:00 (čas ČR)
 (function(){
+  const OPEN=9, CLOSE=18;
+  const order=['po','út','st','čt','pá','so','ne'];
+  const openDays=['út','st','čt','pá','so'];
+  const locative={'út':'v úterý','st':'ve středu','čt':'ve čtvrtek','pá':'v pátek','so':'v sobotu'};
   const parts=new Intl.DateTimeFormat('cs-CZ',{timeZone:'Europe/Prague',weekday:'short',hour:'numeric',minute:'numeric',hour12:false}).formatToParts(new Date());
   const get=t=>parts.find(p=>p.type===t)?.value;
   const day=(get('weekday')||'').toLowerCase().replace('.','');
   const now=Number(get('hour'))+Number(get('minute'))/60;
-  const workday=['po','út','st','čt','pá'].includes(day);
-  const open=workday&&now>=9&&now<17;
+  const workday=openDays.includes(day);
+  const open=workday&&now>=OPEN&&now<CLOSE;
   const dot=document.getElementById('topDot'),st=document.getElementById('topStatus'),note=document.getElementById('todayNote');
   if(!dot||!st||!note)return;
-  if(open){st.textContent='Otevřeno';note.textContent='— dnes do 17:00';}
+  if(open){st.textContent='Otevřeno';note.textContent='— dnes do 18:00';}
   else{
     dot.classList.add('shut');st.textContent='Zavřeno';
-    if(workday&&now<9)note.textContent='— otevíráme dnes v 9:00';
-    else if(day==='pá'||day==='so')note.textContent='— otevíráme v pondělí v 9:00';
-    else note.textContent='— otevíráme zítra v 9:00';
+    if(workday&&now<OPEN){note.textContent='— otevíráme dnes v 9:00';}
+    else{
+      const i=order.indexOf(day);
+      for(let s=1;s<=7;s++){
+        const d=order[(i+s)%7];
+        if(openDays.includes(d)){note.textContent='— otevíráme '+(s===1?'zítra':locative[d])+' v 9:00';break;}
+      }
+    }
   }
 })();
 
