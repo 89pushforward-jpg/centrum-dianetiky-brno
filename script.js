@@ -47,6 +47,37 @@ document.querySelectorAll('.tabs button').forEach(b=>{
   });
 });
 
+// ---- rozvrh na stránce Kontakt (propojeno s administrací přes localStorage) ----
+(function(){
+  const el=document.getElementById('sched');
+  if(!el)return;
+  const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const nextDow=(from,dow)=>{const d=new Date(from);d.setHours(0,0,0,0);do{d.setDate(d.getDate()+1);}while(d.getDay()!==dow);return d;};
+  // výchozí termíny (dokud admin nevytvoří vlastní) — vždy relativní k dnešku
+  function defaultEvents(){
+    const t=new Date(),sat1=nextDow(t,6),sat2=nextDow(sat1,6),sat3=nextDow(sat2,6),tue=nextDow(t,2);
+    return [
+      {date:iso(sat1),title:'Hubbardův dianetický seminář'},
+      {date:iso(tue),title:'Kurz osobní efektivity'},
+      {date:iso(sat2),title:'Den otevřených dveří'},
+      {date:iso(sat3),title:'Hubbardův dianetický seminář'},
+    ];
+  }
+  let events;
+  try{events=JSON.parse(localStorage.getItem('cdb_admin_events'));}catch(e){events=null;}
+  if(!Array.isArray(events)||!events.length)events=defaultEvents();
+  const today=new Date();today.setHours(0,0,0,0);
+  const months=['led','úno','bře','dub','kvě','čvn','čvc','srp','zář','říj','lis','pro'];
+  const dows=['neděle','pondělí','úterý','středa','čtvrtek','pátek','sobota'];
+  const upcoming=events.map(e=>({...e,d:new Date(e.date+'T00:00:00')}))
+    .filter(e=>!isNaN(e.d)&&e.d>=today).sort((a,b)=>a.d-b.d).slice(0,6);
+  const head='<div class="head"><b>Rozvrh — nejbližší akce</b><span>Semináře, kurzy a akce centra</span></div>';
+  const body=upcoming.length
+    ? upcoming.map(e=>`<div class="item"><div class="date"><b>${e.d.getDate()}</b><span>${months[e.d.getMonth()]}</span></div><div class="info"><b>${e.title}</b><span>${dows[e.d.getDay()]}</span></div></div>`).join('')
+    : '<div class="empty">Aktuálně nejsou vypsané žádné termíny.<br>Ozvěte se nám a rádi Vám poradíme.</div>';
+  el.innerHTML=head+body;
+})();
+
 // formuláře (ukázka — naživo půjde na e-mail)
 document.querySelectorAll('form[data-demo]').forEach(f=>{
   f.addEventListener('submit',function(e){

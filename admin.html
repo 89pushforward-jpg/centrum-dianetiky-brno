@@ -392,6 +392,13 @@ function addPerson(){
 function delPerson(i){const t=store.get('team',defaultTeam);t.splice(i,1);store.set('team',t);renderTeam();toast('Osoba odebrána');}
 
 // ---- rozvrh (kalendář) ----
+// výchozí termíny — stejné jako na stránce Kontakt, dokud se nevytvoří vlastní
+const _iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const _nextDow=(from,dow)=>{const d=new Date(from);d.setHours(0,0,0,0);do{d.setDate(d.getDate()+1);}while(d.getDay()!==dow);return d;};
+function defaultEvents(){
+  const t=new Date(),s1=_nextDow(t,6),s2=_nextDow(s1,6),s3=_nextDow(s2,6),tue=_nextDow(t,2);
+  return [{date:_iso(s1),title:'Hubbardův dianetický seminář'},{date:_iso(tue),title:'Kurz osobní efektivity'},{date:_iso(s2),title:'Den otevřených dveří'},{date:_iso(s3),title:'Hubbardův dianetický seminář'}];
+}
 let calY,calM;
 function initCal(){const d=new Date();calY=d.getFullYear();calM=d.getMonth();}
 function calMove(n){calM+=n;if(calM<0){calM=11;calY--;}if(calM>11){calM=0;calY++;}renderCal();}
@@ -399,7 +406,7 @@ function renderCal(){
   const monthsCz=['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'];
   document.getElementById('calLabel').textContent=monthsCz[calM]+' '+calY;
   const first=new Date(calY,calM,1),start=(first.getDay()+6)%7,days=new Date(calY,calM+1,0).getDate();
-  const events=store.get('events',[]);
+  const events=store.get('events',defaultEvents());
   const dow=['Po','Út','St','Čt','Pá','So','Ne'];
   let html=dow.map(d=>`<div class="dow">${d}</div>`).join('');
   for(let i=0;i<start;i++)html+='<div class="day empty"></div>';
@@ -413,11 +420,11 @@ function renderCal(){
 function addEvent(){
   const date=document.getElementById('ev_date').value,title=document.getElementById('ev_title').value.trim();
   if(!date||!title){toast('Zadejte datum i název');return;}
-  const e=store.get('events',[]);e.push({date,title});store.set('events',e);
+  const e=store.get('events',defaultEvents());e.push({date,title});store.set('events',e);
   const d=new Date(date);calY=d.getFullYear();calM=d.getMonth();
   document.getElementById('ev_title').value='';renderCal();toast('Událost přidána');
 }
-function delEvent(date,idx){const e=store.get('events',[]);e.splice(idx,1);store.set('events',e);renderCal();toast('Událost odebrána');}
+function delEvent(date,idx){const e=store.get('events',defaultEvents());e.splice(idx,1);store.set('events',e);renderCal();toast('Událost odebrána');}
 
 // ---- e-shop ----
 const defaultProducts=[
