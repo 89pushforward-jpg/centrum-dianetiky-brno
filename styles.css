@@ -172,6 +172,20 @@ label{font-size:13px;font-weight:600;color:var(--grey);display:block;margin-bott
 .sched .info b{display:block;font-size:14.5px;color:var(--ink)}
 .sched .info span{font-size:12.5px;color:var(--muted)}
 .sched .empty{padding:26px 20px;text-align:center;color:var(--muted);font-size:13.5px}
+.sched+.sched{margin-top:22px}
+
+/* rozvrh kurzovky (týdenní) */
+.week{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#fff}
+.week .head{background:var(--blue-pale);padding:16px 20px;border-bottom:1px solid var(--line)}
+.week .head b{display:block;font-size:16px;color:var(--blue-deep)}
+.week .head span{font-size:12.5px;color:var(--muted)}
+.week .day{border-bottom:1px solid var(--line)}
+.week .day:last-child{border-bottom:none}
+.week .day .dname{display:flex;justify-content:space-between;align-items:center;padding:11px 20px;background:var(--bg-soft);font-size:12.5px;font-weight:700;color:var(--grey);text-transform:uppercase;letter-spacing:.05em}
+.week .day .slot{display:flex;gap:14px;align-items:baseline;padding:11px 20px 11px 30px;border-top:1px solid var(--line)}
+.week .day .slot .time{flex:0 0 auto;width:92px;font-weight:700;color:var(--blue-deep);font-size:13.5px;font-variant-numeric:tabular-nums}
+.week .day .slot .what{font-size:13.5px;color:var(--ink)}
+.week .day .none{padding:9px 20px 9px 30px;font-size:12.5px;color:var(--muted);font-style:italic}
 
 /* footer */
 footer{border-top:1px solid var(--line);padding:52px 0 90px;font-size:14px;color:var(--grey)}

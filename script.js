@@ -47,7 +47,38 @@ document.querySelectorAll('.tabs button').forEach(b=>{
   });
 });
 
-// ---- rozvrh na stránce Kontakt (propojeno s administrací přes localStorage) ----
+// ---- rozvrh kurzovky — pravidelný týdenní rozvrh (propojeno s administrací) ----
+(function(){
+  const el=document.getElementById('weekSched');
+  if(!el)return;
+  const dayNames=['Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota','Neděle'];
+  function defaultWeek(){
+    // dokud si admin nevytvoří vlastní rozvrh — ukázkové pravidelné hodiny
+    return {
+      0:[{time:'17:00–19:00',what:'Kurzy na zlepšení života'}],
+      1:[{time:'09:30–12:30',what:'Hubbardův dianetický seminář'}],
+      2:[],
+      3:[{time:'17:00–19:00',what:'Kurz osobní efektivity'}],
+      4:[],
+      5:[{time:'09:30–13:00',what:'Hubbardův dianetický seminář'},{time:'14:00–16:00',what:'Kurz Komunikací k úspěchu'}],
+      6:[],
+    };
+  }
+  let week;
+  try{week=JSON.parse(localStorage.getItem('cdb_admin_week'));}catch(e){week=null;}
+  if(!week||typeof week!=='object')week=defaultWeek();
+  const head='<div class="head"><b>Rozvrh kurzovky</b><span>Pravidelné hodiny v týdnu</span></div>';
+  const body=dayNames.map((name,i)=>{
+    const slots=week[i]||[];
+    const inner=slots.length
+      ? slots.map(s=>`<div class="slot"><span class="time">${s.time}</span><span class="what">${s.what}</span></div>`).join('')
+      : '<div class="none">Bez pravidelné výuky</div>';
+    return `<div class="day"><div class="dname">${name}</div>${inner}</div>`;
+  }).join('');
+  el.innerHTML=head+body;
+})();
+
+// ---- rozvrh termínů/seminářů na stránce Kontakt (propojeno s administrací přes localStorage) ----
 (function(){
   const el=document.getElementById('sched');
   if(!el)return;
@@ -71,7 +102,7 @@ document.querySelectorAll('.tabs button').forEach(b=>{
   const dows=['neděle','pondělí','úterý','středa','čtvrtek','pátek','sobota'];
   const upcoming=events.map(e=>({...e,d:new Date(e.date+'T00:00:00')}))
     .filter(e=>!isNaN(e.d)&&e.d>=today).sort((a,b)=>a.d-b.d).slice(0,6);
-  const head='<div class="head"><b>Rozvrh — nejbližší akce</b><span>Semináře, kurzy a akce centra</span></div>';
+  const head='<div class="head"><b>Rozvrh — nejbližší termíny</b><span>Semináře a jednorázové akce centra</span></div>';
   const body=upcoming.length
     ? upcoming.map(e=>`<div class="item"><div class="date"><b>${e.d.getDate()}</b><span>${months[e.d.getMonth()]}</span></div><div class="info"><b>${e.title}</b><span>${dows[e.d.getDay()]}</span></div></div>`).join('')
     : '<div class="empty">Aktuálně nejsou vypsané žádné termíny.<br>Ozvěte se nám a rádi Vám poradíme.</div>';

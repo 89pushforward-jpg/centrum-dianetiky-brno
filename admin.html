@@ -228,15 +228,28 @@ main{padding:28px 34px 60px;max-width:1100px}
 
     <!-- ROZVRH -->
     <section class="pane" id="pane-rozvrh">
-      <div class="top"><h2>Rozvrh</h2>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button class="btn ghost sm" onclick="calMove(-1)">‹</button>
-          <b id="calLabel" style="min-width:150px;text-align:center"></b>
-          <button class="btn ghost sm" onclick="calMove(1)">›</button>
+      <div class="top"><h2>Rozvrh</h2></div>
+
+      <div class="card">
+        <h3>Rozvrh kurzovky</h3>
+        <div class="sub">Pravidelné hodiny v týdnu — zobrazí se na stránce Kontakt jako týdenní tabulka.</div>
+        <div id="weekEditor"></div>
+        <div class="save-bar">
+          <button class="btn" onclick="saveWeek()">Uložit rozvrh kurzovky</button>
+          <span class="saved" id="savedWeek">✓ Uloženo</span>
         </div>
       </div>
+
       <div class="card">
-        <h3>Přidat událost do rozvrhu</h3>
+        <div class="top" style="margin-bottom:14px">
+          <h3 style="margin-bottom:0">Rozvrh termínů a seminářů</h3>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn ghost sm" onclick="calMove(-1)">‹</button>
+            <b id="calLabel" style="min-width:150px;text-align:center"></b>
+            <button class="btn ghost sm" onclick="calMove(1)">›</button>
+          </div>
+        </div>
+        <div class="sub">Jednorázová data — semináře, dny otevřených dveří apod. Zobrazí se na stránce Kontakt jako seznam nejbližších termínů.</div>
         <div class="field-row">
           <div><label>Datum</label><input type="date" id="ev_date"></div>
           <div style="flex:2"><label>Název</label><input id="ev_title" placeholder="Např. Hubbardův dianetický seminář"></div>
@@ -321,7 +334,7 @@ document.getElementById('nav').addEventListener('click',e=>{
 });
 
 // ---- init vše ----
-function initAll(){ initChart(); initHours(); initContact(); renderTeam(); initCal(); renderCal(); renderProducts(); renderTerms(); }
+function initAll(){ initChart(); initHours(); initContact(); renderTeam(); initWeek(); initCal(); renderCal(); renderProducts(); renderTerms(); }
 
 // ---- graf ----
 function initChart(){
@@ -390,6 +403,72 @@ function addPerson(){
   if(file){const r=new FileReader();r.onload=()=>done(r.result);r.readAsDataURL(file);}else done('');
 }
 function delPerson(i){const t=store.get('team',defaultTeam);t.splice(i,1);store.set('team',t);renderTeam();toast('Osoba odebrána');}
+
+// ---- rozvrh kurzovky (týdenní pravidelný rozvrh) ----
+const WEEK_DAYS=['Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota','Neděle'];
+function defaultWeek(){
+  return {
+    0:[{time:'17:00–19:00',what:'Kurzy na zlepšení života'}],
+    1:[{time:'09:30–12:30',what:'Hubbardův dianetický seminář'}],
+    2:[],
+    3:[{time:'17:00–19:00',what:'Kurz osobní efektivity'}],
+    4:[],
+    5:[{time:'09:30–13:00',what:'Hubbardův dianetický seminář'},{time:'14:00–16:00',what:'Kurz Komunikací k úspěchu'}],
+    6:[],
+  };
+}
+function initWeek(){
+  const week=store.get('week',defaultWeek());
+  document.getElementById('weekEditor').innerHTML=WEEK_DAYS.map((name,i)=>{
+    const slots=week[i]||[];
+    const rows=slots.map((s,si)=>`
+      <div class="field-row" style="margin-bottom:8px" data-day="${i}" data-slot="${si}">
+        <div style="flex:0 0 150px"><input type="text" value="${esc(s.time)}" placeholder="09:00–11:00" data-w="time"></div>
+        <div style="flex:2"><input type="text" value="${esc(s.what)}" placeholder="Název kurzu" data-w="what"></div>
+        <button class="btn danger sm" onclick="delWeekSlot(${i},${si})" type="button">Odebrat</button>
+      </div>`).join('');
+    return `<div class="card" style="padding:16px 18px;margin-top:12px;border:1px solid var(--line)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <b style="font-size:14px">${name}</b>
+        <button class="btn ghost sm" onclick="addWeekSlot(${i})" type="button">+ Přidat hodinu</button>
+      </div>
+      <div id="weekDay${i}">${rows || '<p style="color:var(--muted);font-size:13px">Bez pravidelné výuky.</p>'}</div>
+    </div>`;
+  }).join('');
+}
+function esc(s){return String(s??'').replace(/"/g,'&quot;');}
+function readWeekFromForm(){
+  const week=store.get('week',defaultWeek());
+  for(let i=0;i<7;i++){
+    const rows=document.querySelectorAll(`#weekEditor [data-day="${i}"]`);
+    const slots=[];
+    rows.forEach(r=>{
+      const time=r.querySelector('[data-w="time"]').value.trim();
+      const what=r.querySelector('[data-w="what"]').value.trim();
+      if(time||what) slots.push({time,what});
+    });
+    week[i]=slots;
+  }
+  return week;
+}
+function addWeekSlot(day){
+  const week=readWeekFromForm();
+  week[day]=week[day]||[];
+  week[day].push({time:'',what:''});
+  store.set('week',week);
+  initWeek();
+}
+function delWeekSlot(day,idx){
+  const week=readWeekFromForm();
+  week[day].splice(idx,1);
+  store.set('week',week);
+  initWeek();
+}
+function saveWeek(){
+  const week=readWeekFromForm();
+  store.set('week',week);
+  flash('savedWeek');toast('Rozvrh kurzovky uložen');
+}
 
 // ---- rozvrh (kalendář) ----
 // výchozí termíny — stejné jako na stránce Kontakt, dokud se nevytvoří vlastní
