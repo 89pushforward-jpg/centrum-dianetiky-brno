@@ -116,3 +116,35 @@ document.querySelectorAll('form[data-demo]').forEach(f=>{
     this.innerHTML='<div style="padding:26px 4px"><h3 style="font-size:19px;font-weight:800">Děkujeme za Vaši zprávu</h3><p style="font-size:14.5px;color:#666;margin-top:8px">Ozveme se Vám co nejdříve to bude možné.<br><small style="color:#8a8a8a">(Náhledová ukázka — na ostrém webu zpráva dorazí přímo na e-mail centra.)</small></p></div>';
   });
 });
+
+// registrace kurzů: statický web předá vyplněnou přihlášku do e-mailu centra
+(function(){
+  const form=document.querySelector('form[data-registration]');
+  if(!form)return;
+  const course=new URLSearchParams(location.search).get('kurz')||'Kurz';
+  const title=document.getElementById('registrationCourse');
+  if(title)title.textContent=course;
+  const subject=document.getElementById('registrationSubject');
+  if(subject)subject.value=course;
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    if(!form.reportValidity())return;
+    const data=new FormData(form);
+    const body=['Dobrý den,','','chci se přihlásit na: '+data.get('course'),'','Jméno: '+data.get('name'),'E-mail: '+data.get('email'),'Telefon: '+data.get('phone'),'','Poznámka: '+(data.get('message')||''),'','Souhlas se zpracováním osobních údajů: ano'].join('\n');
+    const href='mailto:info@centrum-inspiria.cz?subject='+encodeURIComponent('Přihláška: '+data.get('course'))+'&body='+encodeURIComponent(body);
+    const note=document.getElementById('registrationFeedback');
+    if(note){note.hidden=false;note.textContent='Otevřeme Vám e-mailovou zprávu s vyplněnou přihláškou. Před odesláním ji můžete zkontrolovat.';}
+    location.href=href;
+  });
+})();
+
+// OCA: návštěvník nejdřív výslovně odsouhlasí předání na existující dotazník.
+(function(){
+  const consent=document.getElementById('ocaConsent'),button=document.getElementById('ocaStart'),frame=document.getElementById('ocaFrame');
+  if(!consent||!button||!frame)return;
+  button.addEventListener('click',()=>{
+    if(!consent.checked){consent.focus();return;}
+    frame.src='https://inspiria.onquanda.com/survey/db80d49c81501bb3f0f61db77910e596/';
+    frame.hidden=false;button.closest('.oca-gate').hidden=true;
+  });
+})();

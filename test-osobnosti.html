@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=7">
+<link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
 
@@ -80,18 +80,14 @@
 
 <section class="band">
   <div class="container">
-    <span class="label">Zajímá Vás jak si v testu povedete?</span>
+    <span class="label">Zajímá Vás, jak si v testu povedete?</span>
     <h2>Vyplnit osobnostní test</h2>
-    <form data-demo style="max-width:640px;margin-top:30px">
-      <div class="row">
-        <div><label>Vaše jméno *</label><input type="text" required></div>
-        <div><label>Telefon *</label><input type="tel" required></div>
-      </div>
-      <div><label>Váš e-mail *</label><input type="email" required></div>
-      <div><label>Zpráva</label><textarea rows="4" placeholder="Chci vyplnit osobnostní test…"></textarea></div>
-      <button class="btn btn-blue" type="submit">Odeslat</button>
-      <p class="note" style="margin-top:12px">Ozveme se Vám s termínem konzultace a vyhodnocením.</p>
-    </form>
+    <div class="oca-gate" style="margin-top:30px">
+      <p style="color:var(--grey)">Test obsahuje 200 otázek a obvykle zabere 20 až 40 minut. Odpovídejte celý najednou a vybírejte vždy první odpověď, která Vás napadne.</p>
+      <label class="consent" for="ocaConsent" style="margin-top:20px"><input id="ocaConsent" type="checkbox"><span>Rozumím, že po pokračování bude test otevřen v externím formuláři Inspiria/Quanda a souhlasím s předáním údajů podle <a href="ochrana-osobnich-udaju.html" style="color:var(--blue-deep);text-decoration:underline">zásad ochrany osobních údajů</a>.</span></label>
+      <button class="btn btn-blue" id="ocaStart" type="button">Pokračovat k testu</button>
+    </div>
+    <iframe id="ocaFrame" class="oca-frame" title="Osobnostní dotazník" hidden loading="lazy"></iframe>
   </div>
 </section>
 
@@ -124,6 +120,6 @@
   <a class="test" href="test-osobnosti.html">Test zdarma</a>
 </div>
 
-<script src="script.js?v=5"></script>
+<script src="script.js?v=8"></script>
 </body>
 </html>
