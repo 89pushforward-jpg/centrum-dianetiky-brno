@@ -180,12 +180,14 @@ document.querySelectorAll('form[data-demo]').forEach(f=>{
   const closeCart=()=>{panel.classList.remove('open');panel.setAttribute('aria-hidden','true');toggle.setAttribute('aria-expanded','false');backdrop.hidden=true;};
   toggle.addEventListener('click',openCart);close.addEventListener('click',closeCart);backdrop.addEventListener('click',closeCart);
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCart();});
-  grid.addEventListener('click',e=>{
-    const button=e.target.closest('.add-to-cart');if(!button)return;
-    const card=button.closest('.product-card');
+  const addProduct=card=>{
     const id=card.dataset.productId;let item=cart.find(x=>x.id===id);
     if(item)item.quantity+=1;else cart.push({id,name:card.dataset.productName,price:Number(card.dataset.productPrice),quantity:1});
-    render();openCart();button.textContent='Přidáno';setTimeout(()=>button.textContent='Do košíku',900);
+    render();
+  };
+  grid.addEventListener('click',e=>{
+    const button=e.target.closest('.add-to-cart');if(!button)return;
+    addProduct(button.closest('.product-card'));openCart();button.textContent='Přidáno';setTimeout(()=>button.textContent='Do košíku',900);
   });
   itemsEl.addEventListener('click',e=>{
     const button=e.target.closest('[data-cart-action]');if(!button)return;
@@ -201,4 +203,9 @@ document.querySelectorAll('form[data-demo]').forEach(f=>{
     alert(`Objednávka bude v dalším kroku doplněna o dopravu Zásilkovnou a bezpečnou platbu Stripe.\n\n${summary}\n\nCelkem: ${format.format(total)}`);
   });
   render();
+  const requestedProduct=new URLSearchParams(location.search).get('add');
+  if(requestedProduct){
+    const requestedCard=grid.querySelector(`[data-product-id="${requestedProduct}"]`);
+    if(requestedCard){addProduct(requestedCard);openCart();history.replaceState(null,'',location.pathname);}
+  }
 })();
