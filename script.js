@@ -148,3 +148,49 @@ document.querySelectorAll('form[data-demo]').forEach(f=>{
     frame.hidden=false;button.closest('.oca-gate').hidden=true;
   });
 })();
+
+
+// e-shop — lokální košík. Platba a doprava se doplní po napojení bezpečného backendu.
+(function(){
+  const grid=document.getElementById('eshopGrid');
+  const panel=document.getElementById('cartPanel');
+  if(!grid||!panel)return;
+  const itemsEl=document.getElementById('cartItems');
+  const emptyEl=document.getElementById('cartEmpty');
+  const totalEl=document.getElementById('cartTotal');
+  const countEl=document.getElementById('cartCount');
+  const summaryEl=document.getElementById('cartSummary');
+  const format=new Intl.NumberFormat('cs-CZ',{style:'currency',currency:'CZK',maximumFractionDigits:0});
+  let cart=[];
+  try{cart=JSON.parse(localStorage.getItem('cdb_cart_v1'))||[];}catch(e){cart=[];}
+  const save=()=>localStorage.setItem('cdb_cart_v1',JSON.stringify(cart));
+  const render=()=>{
+    const amount=cart.reduce((sum,item)=>sum+item.price*item.quantity,0);
+    const count=cart.reduce((sum,item)=>sum+item.quantity,0);
+    countEl.textContent=count;
+    emptyEl.hidden=Boolean(cart.length);itemsEl.hidden=!cart.length;summaryEl.hidden=!cart.length;
+    itemsEl.innerHTML=cart.map(item=>`<div class="cart-item"><div><b>${item.name}</b><div class="cart-quantity"><button type="button" data-cart-action="decrease" data-id="${item.id}" aria-label="Odebrat jeden kus">−</button><span>${item.quantity} ks</span><button type="button" data-cart-action="increase" data-id="${item.id}" aria-label="Přidat jeden kus">+</button></div></div><div class="cart-item-price"><b>${format.format(item.price*item.quantity)}</b><button type="button" class="cart-remove" data-cart-action="remove" data-id="${item.id}">Odstranit</button></div></div>`).join('');
+    totalEl.textContent=format.format(amount);save();
+  };
+  grid.addEventListener('click',e=>{
+    const button=e.target.closest('.add-to-cart');if(!button)return;
+    const card=button.closest('.product-card');
+    const id=card.dataset.productId;let item=cart.find(x=>x.id===id);
+    if(item)item.quantity+=1;else cart.push({id,name:card.dataset.productName,price:Number(card.dataset.productPrice),quantity:1});
+    render();button.textContent='Přidáno';setTimeout(()=>button.textContent='Do košíku',900);
+  });
+  itemsEl.addEventListener('click',e=>{
+    const button=e.target.closest('[data-cart-action]');if(!button)return;
+    const index=cart.findIndex(x=>x.id===button.dataset.id);if(index<0)return;
+    if(button.dataset.cartAction==='increase')cart[index].quantity+=1;
+    if(button.dataset.cartAction==='decrease')cart[index].quantity-=1;
+    if(button.dataset.cartAction==='remove'||cart[index]?.quantity<1)cart.splice(index,1);
+    render();
+  });
+  document.getElementById('cartCheckout').addEventListener('click',()=>{
+    const summary=cart.map(i=>`${i.name} — ${i.quantity} ks — ${format.format(i.price*i.quantity)}`).join('\n');
+    const total=cart.reduce((sum,item)=>sum+item.price*item.quantity,0);
+    alert(`Objednávka bude v dalším kroku doplněna o dopravu Zásilkovnou a bezpečnou platbu Stripe.\n\n${summary}\n\nCelkem: ${format.format(total)}`);
+  });
+  render();
+})();

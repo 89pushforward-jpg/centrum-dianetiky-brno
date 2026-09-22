@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=8">
+<link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body>
 
@@ -44,65 +44,130 @@
   <div class="container">
     <span class="label">E-shop</span>
     <h1>Knihy a DVD</h1>
-    <p class="lead">Materiály od L. Ron Hubbarda pro samostudium i doplnění kurzu. Objednávku vyřídíme osobně — po odeslání se Vám ozveme s dostupností, cenou a způsobem předání.</p>
+    <p class="lead">Materiály od L. Ron Hubbarda pro samostudium i doplnění kurzu. Vyberte si položky a vložte je do košíku.</p>
   </div>
 </div>
 
 <section>
   <div class="container">
+    <aside class="cart-panel" id="cartPanel" aria-live="polite">
+      <div class="cart-head"><div><span class="label">Váš košík</span><h2>Objednávka</h2></div><span class="cart-count" id="cartCount">0</span></div>
+      <div id="cartEmpty" class="cart-empty">Košík je zatím prázdný. Vyberte si produkt z nabídky.</div>
+      <div id="cartItems" class="cart-items" hidden></div>
+      <div id="cartSummary" class="cart-summary" hidden><div><span>Mezisoučet</span><strong id="cartTotal">0 Kč</strong></div><p>Dopravu a platbu zvolíte v dalším kroku.</p><button class="btn btn-blue" type="button" id="cartCheckout">Pokračovat k objednávce</button></div>
+    </aside>
     <div class="grid-4" id="eshopGrid">
-      <div class="card reveal">
-        <div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-dianetika-moderna.png" alt="Dianetika: Moderní věda o duševním zdraví" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div>
+      <article class="card reveal product-card" data-product-id="p1" data-product-name="Dianetika" data-product-price="475">
+        <div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-dianetika-moderna.png" alt="Dianetika" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div>
         <div class="body">
-          <span style="font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-weight:700">Kniha</span>
-          <h3>Dianetika: Moderní věda o duševním zdraví</h3>
-          <p>Základní kniha o lidské mysli — bestseller L. Ron Hubbarda přeložený do desítek jazyků.</p>
-          <a class="btn btn-blue" style="margin-top:auto;align-self:flex-start" href="mailto:info@centrum-inspiria.cz?subject=Objedn%C3%A1vka%3A%20Dianetika%20(kniha)&body=Dobr%C3%BD%20den%2C%20m%C3%A1m%20z%C3%A1jem%20o%20knihu%20Dianetika%3A%20Modern%C3%AD%20v%C4%9Bda%20o%20du%C5%A1evn%C3%ADm%20zdrav%C3%AD.%0AJm%C3%A9no%3A%0ATelefon%3A">Objednat</a>
+          <span class="product-type">Kniha</span>
+          <h3>Dianetika</h3>
+          <p>Základní kniha o lidské mysli od L. Ron Hubbarda.</p>
+          <div class="product-bottom"><strong class="product-price">475 Kč</strong><button class="btn btn-blue add-to-cart" type="button">Do košíku</button></div>
         </div>
-      </div>
-
-      <div class="card reveal">
+      </article>
+      <article class="card reveal product-card" data-product-id="p2" data-product-name="Dianetika: Původní teze" data-product-price="400">
         <div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-puvodni-studie.png" alt="Dianetika: Původní teze" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div>
         <div class="body">
-          <span style="font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-weight:700">Kniha</span>
+          <span class="product-type">Kniha</span>
           <h3>Dianetika: Původní teze</h3>
           <p>První ucelený zápis principů Dianetiky — kde všechno začalo.</p>
-          <a class="btn btn-blue" style="margin-top:auto;align-self:flex-start" href="mailto:info@centrum-inspiria.cz?subject=Objedn%C3%A1vka%3A%20Dianetika%20-%20P%C5%AFvodn%C3%AD%20teze&body=Dobr%C3%BD%20den%2C%20m%C3%A1m%20z%C3%A1jem%20o%20knihu%20Dianetika%3A%20P%C5%AFvodn%C3%AD%20teze.%0AJm%C3%A9no%3A%0ATelefon%3A">Objednat</a>
+          <div class="product-bottom"><strong class="product-price">400 Kč</strong><button class="btn btn-blue add-to-cart" type="button">Do košíku</button></div>
         </div>
-      </div>
-
-      <div class="card reveal">
+      </article>
+      <article class="card reveal product-card" data-product-id="p3" data-product-name="Dianetika: Vývoj vědy" data-product-price="400">
         <div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-vyvoj-vedy.png" alt="Dianetika: Vývoj vědy" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div>
         <div class="body">
-          <span style="font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-weight:700">Kniha</span>
+          <span class="product-type">Kniha</span>
           <h3>Dianetika: Vývoj vědy</h3>
           <p>Poutavý příběh o tom, jak Dianetika vznikala a jak byla objevena reaktivní mysl.</p>
-          <a class="btn btn-blue" style="margin-top:auto;align-self:flex-start" href="mailto:info@centrum-inspiria.cz?subject=Objedn%C3%A1vka%3A%20Dianetika%20-%20V%C3%BDvoj%20v%C4%9Bdy&body=Dobr%C3%BD%20den%2C%20m%C3%A1m%20z%C3%A1jem%20o%20knihu%20Dianetika%3A%20V%C3%BDvoj%20v%C4%9Bdy.%0AJm%C3%A9no%3A%0ATelefon%3A">Objednat</a>
+          <div class="product-bottom"><strong class="product-price">400 Kč</strong><button class="btn btn-blue add-to-cart" type="button">Do košíku</button></div>
         </div>
-      </div>
-
-      <div class="card reveal">
-        <div class="ph product-dvd" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/dvd-problemy-prace.jpg" alt="Problémy práce — film na DVD" loading="lazy"></div>
+      </article>
+      <article class="card reveal product-card" data-product-id="p4" data-product-name="Sebaanalýza" data-product-price="400">
+        <div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-sebaanalyza.png" alt="Sebaanalýza" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div>
         <div class="body">
-          <span style="font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-weight:700">DVD</span>
-          <h3>Problémy práce — film</h3>
-          <p>Filmové zpracování knihy Problémy práce — praktické principy pro práci i každodenní život.</p>
-          <a class="btn btn-blue" style="margin-top:auto;align-self:flex-start" href="mailto:info@centrum-inspiria.cz?subject=Objedn%C3%A1vka%3A%20Probl%C3%A9my%20pr%C3%A1ce%20(DVD)&body=Dobr%C3%BD%20den%2C%20m%C3%A1m%20z%C3%A1jem%20o%20DVD%20Probl%C3%A9my%20pr%C3%A1ce.%0AJm%C3%A9no%3A%0ATelefon%3A">Objednat</a>
+          <span class="product-type">Kniha</span>
+          <h3>Sebaanalýza</h3>
+          <p>Praktické materiály pro práci se sebou samým.</p>
+          <div class="product-bottom"><strong class="product-price">400 Kč</strong><button class="btn btn-blue add-to-cart" type="button">Do košíku</button></div>
         </div>
-      </div>
-
-      <div class="card reveal" id="problemy-prace"><div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-problemy-prace.png" alt="Problémy práce" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div><div class="body"><span style="font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-weight:700">Kniha</span><h3>Problémy práce</h3><p>Principy, které můžete využít v pracovním i osobním životě.</p><a class="btn btn-blue" style="margin-top:auto;align-self:flex-start" href="mailto:info@centrum-inspiria.cz?subject=Objedn%C3%A1vka%3A%20Probl%C3%A9my%20pr%C3%A1ce">Objednat</a></div></div>
-      <div class="card reveal"><div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-zaklady-mysleni.png" alt="Základy myšlení" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div><div class="body"><span style="font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-weight:700">Kniha</span><h3>Základy myšlení</h3><p>Úvod do základních principů, které se týkají člověka a jeho života.</p><a class="btn btn-blue" style="margin-top:auto;align-self:flex-start" href="mailto:info@centrum-inspiria.cz?subject=Objedn%C3%A1vka%3A%20Z%C3%A1klady%20my%C5%A1len%C3%AD">Objednat</a></div></div>
-      <div class="card reveal"><div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-sebaanalyza.png" alt="Sebaanalýza" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div><div class="body"><span style="font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-weight:700">Kniha</span><h3>Sebaanalýza</h3><p>Praktické materiály pro práci se sebou samým.</p><a class="btn btn-blue" style="margin-top:auto;align-self:flex-start" href="mailto:info@centrum-inspiria.cz?subject=Objedn%C3%A1vka%3A%20Sebaanal%C3%BDza">Objednat</a></div></div>
-      <div class="card reveal"><div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-novy-pohled-na-zivot.png" alt="Nový pohled na život" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div><div class="body"><span style="font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-weight:700">Kniha</span><h3>Nový pohled na život</h3><p>Výběr myšlenek a principů pro každodenní život.</p><a class="btn btn-blue" style="margin-top:auto;align-self:flex-start" href="mailto:info@centrum-inspiria.cz?subject=Objedn%C3%A1vka%3A%20Nov%C3%BD%20pohled%20na%20%C5%BEivot">Objednat</a></div></div>
-      <div class="card reveal"><div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-cesta-ke-stesti.png" alt="Cesta ke štěstí" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div><div class="body"><span style="font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-weight:700">Kniha</span><h3>Cesta ke štěstí</h3><p>Kniha o každodenních zásadách pro lepší soužití s druhými.</p><a class="btn btn-blue" style="margin-top:auto;align-self:flex-start" href="mailto:info@centrum-inspiria.cz?subject=Objedn%C3%A1vka%3A%20Cesta%20ke%20%C5%A1t%C4%9Bst%C3%AD">Objednat</a></div></div>
-      <div class="card reveal"><div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-prirucka-pro-precleary.png" alt="Příručka pro precleary" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div><div class="body"><span style="font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-weight:700">Kniha</span><h3>Příručka pro precleary</h3><p>Praktická příručka určená pro individuální práci s materiály Dianetiky.</p><a class="btn btn-blue" style="margin-top:auto;align-self:flex-start" href="mailto:info@centrum-inspiria.cz?subject=Objedn%C3%A1vka%3A%20P%C5%99%C3%ADru%C4%8Dka%20pro%20precleary">Objednat</a></div></div>
-      <div class="card reveal"><div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-dianetika-55.jpg" alt="Dianetika 55!" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div><div class="body"><span style="font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-weight:700">Kniha</span><h3>Dianetika 55!</h3><p>Další titul z oblasti Dianetiky a komunikace.</p><a class="btn btn-blue" style="margin-top:auto;align-self:flex-start" href="mailto:info@centrum-inspiria.cz?subject=Objedn%C3%A1vka%3A%20Dianetika%2055">Objednat</a></div></div>
-      <div class="card reveal"><div class="ph product-dvd" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/dvd-jak-pouzivat-dianetiku.jpg" alt="Dianetika — film na DVD" loading="lazy"></div><div class="body"><span style="font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;font-weight:700">DVD</span><h3>Dianetika — film</h3><p>Filmový úvod k tématům Dianetiky.</p><a class="btn btn-blue" style="margin-top:auto;align-self:flex-start" href="mailto:info@centrum-inspiria.cz?subject=Objedn%C3%A1vka%3A%20Dianetika%20(DVD)">Objednat</a></div></div>
+      </article>
+      <article class="card reveal product-card" data-product-id="p5" data-product-name="Scientologie: Základy myšlení" data-product-price="400">
+        <div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-zaklady-mysleni.png" alt="Scientologie: Základy myšlení" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div>
+        <div class="body">
+          <span class="product-type">Kniha</span>
+          <h3>Scientologie: Základy myšlení</h3>
+          <p>Úvod do základních principů, které se týkají člověka a jeho života.</p>
+          <div class="product-bottom"><strong class="product-price">400 Kč</strong><button class="btn btn-blue add-to-cart" type="button">Do košíku</button></div>
+        </div>
+      </article>
+      <article class="card reveal product-card" data-product-id="p6" data-product-name="Scientologie: Nový pohled na život" data-product-price="400">
+        <div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-novy-pohled-na-zivot.png" alt="Scientologie: Nový pohled na život" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div>
+        <div class="body">
+          <span class="product-type">Kniha</span>
+          <h3>Scientologie: Nový pohled na život</h3>
+          <p>Výběr myšlenek a principů pro každodenní život.</p>
+          <div class="product-bottom"><strong class="product-price">400 Kč</strong><button class="btn btn-blue add-to-cart" type="button">Do košíku</button></div>
+        </div>
+      </article>
+      <article class="card reveal product-card" data-product-id="p7" data-product-name="Problémy práce" data-product-price="400">
+        <div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-problemy-prace.png" alt="Problémy práce" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div>
+        <div class="body">
+          <span class="product-type">Kniha</span>
+          <h3>Problémy práce</h3>
+          <p>Principy, které můžete využít v pracovním i osobním životě.</p>
+          <div class="product-bottom"><strong class="product-price">400 Kč</strong><button class="btn btn-blue add-to-cart" type="button">Do košíku</button></div>
+        </div>
+      </article>
+      <article class="card reveal product-card" data-product-id="p8" data-product-name="Cesta ke štěstí" data-product-price="400">
+        <div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-cesta-ke-stesti.png" alt="Cesta ke štěstí" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div>
+        <div class="body">
+          <span class="product-type">Kniha</span>
+          <h3>Cesta ke štěstí</h3>
+          <p>Kniha o každodenních zásadách pro lepší soužití s druhými.</p>
+          <div class="product-bottom"><strong class="product-price">400 Kč</strong><button class="btn btn-blue add-to-cart" type="button">Do košíku</button></div>
+        </div>
+      </article>
+      <article class="card reveal product-card" data-product-id="p9" data-product-name="Příručka pro precleary" data-product-price="400">
+        <div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-prirucka-pro-precleary.png" alt="Příručka pro precleary" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div>
+        <div class="body">
+          <span class="product-type">Kniha</span>
+          <h3>Příručka pro precleary</h3>
+          <p>Praktická příručka určená pro individuální práci s materiály Dianetiky.</p>
+          <div class="product-bottom"><strong class="product-price">400 Kč</strong><button class="btn btn-blue add-to-cart" type="button">Do košíku</button></div>
+        </div>
+      </article>
+      <article class="card reveal product-card" data-product-id="p10" data-product-name="Čisté tělo, čistá mysl" data-product-price="400">
+        <div class="ph" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/book-dianetika-55.jpg" alt="Čisté tělo, čistá mysl" loading="lazy" style="object-fit:contain;height:280px;width:100%"></div>
+        <div class="body">
+          <span class="product-type">Kniha</span>
+          <h3>Čisté tělo, čistá mysl</h3>
+          <p>Praktický titul z oblasti Dianetiky a osobního rozvoje.</p>
+          <div class="product-bottom"><strong class="product-price">400 Kč</strong><button class="btn btn-blue add-to-cart" type="button">Do košíku</button></div>
+        </div>
+      </article>
+      <article class="card reveal product-card" data-product-id="p11" data-product-name="DVD Jak používat dianetiku" data-product-price="600">
+        <div class="ph product-dvd" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/dvd-jak-pouzivat-dianetiku.jpg" alt="DVD Jak používat dianetiku" loading="lazy"></div>
+        <div class="body">
+          <span class="product-type">DVD</span>
+          <h3>DVD Jak používat dianetiku</h3>
+          <p>Filmový úvod k tématům Dianetiky.</p>
+          <div class="product-bottom"><strong class="product-price">600 Kč</strong><button class="btn btn-blue add-to-cart" type="button">Do košíku</button></div>
+        </div>
+      </article>
+      <article class="card reveal product-card" data-product-id="p12" data-product-name="DVD Problémy práce" data-product-price="500">
+        <div class="ph product-dvd" style="background:#fff;aspect-ratio:auto"><img src="assets/eshop/dvd-problemy-prace.jpg" alt="DVD Problémy práce" loading="lazy"></div>
+        <div class="body">
+          <span class="product-type">DVD</span>
+          <h3>DVD Problémy práce</h3>
+          <p>Filmové zpracování praktických principů pro práci i každodenní život.</p>
+          <div class="product-bottom"><strong class="product-price">500 Kč</strong><button class="btn btn-blue add-to-cart" type="button">Do košíku</button></div>
+        </div>
+      </article>
     </div>
-
     <p class="note" style="margin-top:32px;color:var(--muted);font-size:13px;border-left:2px solid var(--blue);padding-left:14px">
-      Nabídka obsahuje 10 knih a 2 DVD. Dostupnost, cenu a způsob předání potvrdíme po objednávce.
+      Nabídka obsahuje 10 knih a 2 DVD. Ceny jsou uvedeny za kus. Dopravu a platbu doplníme v následujícím kroku objednávky.
     </p>
   </div>
 </section>
@@ -136,6 +201,6 @@
   <a class="test" href="test-osobnosti.html">Test zdarma</a>
 </div>
 
-<script src="script.js?v=8"></script>
+<script src="script.js?v=9"></script>
 </body>
 </html>
