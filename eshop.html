@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=9">
+<link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body>
 
@@ -50,10 +50,11 @@
 
 <section>
   <div class="container">
-    <aside class="cart-panel" id="cartPanel" aria-live="polite">
-      <div class="cart-head"><div><span class="label">Váš košík</span><h2>Objednávka</h2></div><span class="cart-count" id="cartCount">0</span></div>
-      <div id="cartEmpty" class="cart-empty">Košík je zatím prázdný. Vyberte si produkt z nabídky.</div>
-      <div id="cartItems" class="cart-items" hidden></div>
+    <button class="cart-trigger" type="button" id="cartToggle" aria-controls="cartPanel" aria-expanded="false"><span class="cart-trigger-icon" aria-hidden="true">🛒</span><span>Košík</span><span class="cart-count" id="cartTriggerCount">0</span></button>
+    <div class="cart-backdrop" id="cartBackdrop" hidden></div>
+    <aside class="cart-panel" id="cartPanel" aria-label="Váš košík" aria-live="polite" aria-hidden="true">
+      <div class="cart-head"><div><span class="label">Váš košík</span><h2>Objednávka</h2></div><div class="cart-head-actions"><span class="cart-count" id="cartCount">0</span><button class="cart-close" type="button" id="cartClose" aria-label="Zavřít košík">×</button></div></div>
+      <div class="cart-content"><div id="cartEmpty" class="cart-empty">Košík je zatím prázdný. Vyberte si produkt z nabídky.</div><div id="cartItems" class="cart-items" hidden></div></div>
       <div id="cartSummary" class="cart-summary" hidden><div><span>Mezisoučet</span><strong id="cartTotal">0 Kč</strong></div><p>Dopravu a platbu zvolíte v dalším kroku.</p><button class="btn btn-blue" type="button" id="cartCheckout">Pokračovat k objednávce</button></div>
     </aside>
     <div class="grid-4" id="eshopGrid">
@@ -201,6 +202,6 @@
   <a class="test" href="test-osobnosti.html">Test zdarma</a>
 </div>
 
-<script src="script.js?v=9"></script>
+<script src="script.js?v=10"></script>
 </body>
 </html>

@@ -159,6 +159,10 @@ document.querySelectorAll('form[data-demo]').forEach(f=>{
   const emptyEl=document.getElementById('cartEmpty');
   const totalEl=document.getElementById('cartTotal');
   const countEl=document.getElementById('cartCount');
+  const triggerCountEl=document.getElementById('cartTriggerCount');
+  const toggle=document.getElementById('cartToggle');
+  const close=document.getElementById('cartClose');
+  const backdrop=document.getElementById('cartBackdrop');
   const summaryEl=document.getElementById('cartSummary');
   const format=new Intl.NumberFormat('cs-CZ',{style:'currency',currency:'CZK',maximumFractionDigits:0});
   let cart=[];
@@ -167,17 +171,21 @@ document.querySelectorAll('form[data-demo]').forEach(f=>{
   const render=()=>{
     const amount=cart.reduce((sum,item)=>sum+item.price*item.quantity,0);
     const count=cart.reduce((sum,item)=>sum+item.quantity,0);
-    countEl.textContent=count;
+    countEl.textContent=count;triggerCountEl.textContent=count;
     emptyEl.hidden=Boolean(cart.length);itemsEl.hidden=!cart.length;summaryEl.hidden=!cart.length;
     itemsEl.innerHTML=cart.map(item=>`<div class="cart-item"><div><b>${item.name}</b><div class="cart-quantity"><button type="button" data-cart-action="decrease" data-id="${item.id}" aria-label="Odebrat jeden kus">−</button><span>${item.quantity} ks</span><button type="button" data-cart-action="increase" data-id="${item.id}" aria-label="Přidat jeden kus">+</button></div></div><div class="cart-item-price"><b>${format.format(item.price*item.quantity)}</b><button type="button" class="cart-remove" data-cart-action="remove" data-id="${item.id}">Odstranit</button></div></div>`).join('');
     totalEl.textContent=format.format(amount);save();
   };
+  const openCart=()=>{panel.classList.add('open');panel.setAttribute('aria-hidden','false');toggle.setAttribute('aria-expanded','true');backdrop.hidden=false;};
+  const closeCart=()=>{panel.classList.remove('open');panel.setAttribute('aria-hidden','true');toggle.setAttribute('aria-expanded','false');backdrop.hidden=true;};
+  toggle.addEventListener('click',openCart);close.addEventListener('click',closeCart);backdrop.addEventListener('click',closeCart);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCart();});
   grid.addEventListener('click',e=>{
     const button=e.target.closest('.add-to-cart');if(!button)return;
     const card=button.closest('.product-card');
     const id=card.dataset.productId;let item=cart.find(x=>x.id===id);
     if(item)item.quantity+=1;else cart.push({id,name:card.dataset.productName,price:Number(card.dataset.productPrice),quantity:1});
-    render();button.textContent='Přidáno';setTimeout(()=>button.textContent='Do košíku',900);
+    render();openCart();button.textContent='Přidáno';setTimeout(()=>button.textContent='Do košíku',900);
   });
   itemsEl.addEventListener('click',e=>{
     const button=e.target.closest('[data-cart-action]');if(!button)return;
