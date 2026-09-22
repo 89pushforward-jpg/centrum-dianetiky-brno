@@ -167,13 +167,15 @@ document.querySelectorAll('form[data-demo]').forEach(f=>{
   const format=new Intl.NumberFormat('cs-CZ',{style:'currency',currency:'CZK',maximumFractionDigits:0});
   let cart=[];
   try{cart=JSON.parse(localStorage.getItem('cdb_cart_v1'))||[];}catch(e){cart=[];}
+  const productImage=id=>grid.querySelector(`[data-product-id="${id}"] img`)?.getAttribute('src')||'';
+  cart=cart.map(item=>({...item,image:item.image||productImage(item.id)}));
   const save=()=>localStorage.setItem('cdb_cart_v1',JSON.stringify(cart));
   const render=()=>{
     const amount=cart.reduce((sum,item)=>sum+item.price*item.quantity,0);
     const count=cart.reduce((sum,item)=>sum+item.quantity,0);
     countEl.textContent=count;triggerCountEl.textContent=count;
     emptyEl.hidden=Boolean(cart.length);itemsEl.hidden=!cart.length;summaryEl.hidden=!cart.length;
-    itemsEl.innerHTML=cart.map(item=>`<div class="cart-item"><div><b>${item.name}</b><div class="cart-quantity"><button type="button" data-cart-action="decrease" data-id="${item.id}" aria-label="Odebrat jeden kus">−</button><span>${item.quantity} ks</span><button type="button" data-cart-action="increase" data-id="${item.id}" aria-label="Přidat jeden kus">+</button></div></div><div class="cart-item-price"><b>${format.format(item.price*item.quantity)}</b><button type="button" class="cart-remove" data-cart-action="remove" data-id="${item.id}">Odstranit</button></div></div>`).join('');
+    itemsEl.innerHTML=cart.map(item=>`<div class="cart-item"><img class="cart-item-image" src="${item.image||productImage(item.id)}" alt="" aria-hidden="true"><div class="cart-item-info"><b>${item.name}</b><div class="cart-quantity"><button type="button" data-cart-action="decrease" data-id="${item.id}" aria-label="Odebrat jeden kus">−</button><span>${item.quantity} ks</span><button type="button" data-cart-action="increase" data-id="${item.id}" aria-label="Přidat jeden kus">+</button></div></div><div class="cart-item-price"><b>${format.format(item.price*item.quantity)}</b><button type="button" class="cart-remove" data-cart-action="remove" data-id="${item.id}">Odstranit</button></div></div>`).join('');
     totalEl.textContent=format.format(amount);save();
   };
   const openCart=()=>{panel.classList.add('open');panel.setAttribute('aria-hidden','false');toggle.setAttribute('aria-expanded','true');backdrop.hidden=false;};
@@ -182,7 +184,7 @@ document.querySelectorAll('form[data-demo]').forEach(f=>{
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCart();});
   const addProduct=card=>{
     const id=card.dataset.productId;let item=cart.find(x=>x.id===id);
-    if(item)item.quantity+=1;else cart.push({id,name:card.dataset.productName,price:Number(card.dataset.productPrice),quantity:1});
+    if(item)item.quantity+=1;else cart.push({id,name:card.dataset.productName,price:Number(card.dataset.productPrice),image:productImage(id),quantity:1});
     render();
   };
   grid.addEventListener('click',e=>{
