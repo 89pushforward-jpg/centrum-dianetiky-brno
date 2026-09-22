@@ -126,11 +126,20 @@ document.querySelectorAll('form[data-demo]').forEach(f=>{
   if(title)title.textContent=course;
   const subject=document.getElementById('registrationSubject');
   if(subject)subject.value=course;
+  const isAnatomy=course==='Anatomie lidské mysli';
+  const anatomy=document.getElementById('anatomyRegistration'),slot=document.getElementById('anatomySlot');
+  const registrationLead=document.getElementById('registrationLead'),registrationNote=document.getElementById('registrationNote'),registrationSubmit=document.getElementById('registrationSubmit');
+  if(isAnatomy){
+    anatomy.hidden=false;slot.disabled=false;slot.required=true;
+    registrationLead.textContent='Vyberte si úterní nebo středeční termín, vyplňte údaje a pokračujte k jednorázové online platbě 150 Kč.';
+    registrationSubmit.textContent='Připravit přihlášku';
+    registrationNote.textContent='Po odeslání přihlášky doplníme ostrý odkaz na jednorázovou Stripe platbu 150 Kč.';
+  }
   form.addEventListener('submit',e=>{
     e.preventDefault();
     if(!form.reportValidity())return;
     const data=new FormData(form);
-    const body=['Dobrý den,','','chci se přihlásit na: '+data.get('course'),'','Jméno: '+data.get('name'),'E-mail: '+data.get('email'),'Telefon: '+data.get('phone'),'','Poznámka: '+(data.get('message')||''),'','Souhlas se zpracováním osobních údajů: ano'].join('\n');
+    const body=['Dobrý den,','','chci se přihlásit na: '+data.get('course'),'','Jméno: '+data.get('name'),'E-mail: '+data.get('email'),'Telefon: '+data.get('phone'),...(isAnatomy?['Termín: '+data.get('slot'),'Cena: 150 Kč — online platba Stripe, bez dopravy']:[]),'','Poznámka: '+(data.get('message')||''),'','Souhlas se zpracováním osobních údajů: ano'].join('\n');
     const href='mailto:info@centrum-inspiria.cz?subject='+encodeURIComponent('Přihláška: '+data.get('course'))+'&body='+encodeURIComponent(body);
     const note=document.getElementById('registrationFeedback');
     if(note){note.hidden=false;note.textContent='Otevřeme Vám e-mailovou zprávu s vyplněnou přihláškou. Před odesláním ji můžete zkontrolovat.';}
